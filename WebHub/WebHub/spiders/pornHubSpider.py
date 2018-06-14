@@ -15,8 +15,7 @@ class Spider(CrawlSpider):
     name = 'pornHubSpider'
     host = 'https://www.pornhub.com'
     start_urls = list(set(PH_TYPES))
-    logging.getLogger("requests").setLevel(logging.WARNING
-                                          )  # 将requests的日志级别设成WARNING
+    logging.getLogger("requests").setLevel(logging.WARNING)  # 将requests的日志级别设成WARNING
     logging.basicConfig(
         level=logging.DEBUG,
         format=

@@ -1,7 +1,8 @@
 # encoding=utf-8
 import random
-from user_agents import agents
+from WebHub.user_agents import agents
 import json
+import requests
 
 
 class UserAgentMiddleware(object):
@@ -31,3 +32,26 @@ class CookiesMiddleware(object):
             bs += chr(random.randint(97, 122))
         _cookie = json.dumps(self.cookie) % bs
         request.cookies = json.loads(_cookie)
+
+class MyProxyMiddleware(object):
+    def __init__(self):
+        self.ip_url = 'http://localhost:5555/random'
+        self.base_url_ip = 'https://'
+        self.ip_list = []
+        for i in range(10):
+            ip = self.get_proxy()
+            if ip not in self.ip_list:
+                self.ip_list.append(ip)
+
+    def process_request(self, request, spider):
+        ip = random.choice(self.ip_list)
+        if ip:
+            request.meta['proxy'] = ip
+
+    def get_proxy(self):
+        url_response = requests.get(self.ip_url)
+        if url_response.status_code == 200:
+            ip = self.base_url_ip + url_response.text
+            return ip
+        else:
+            None
